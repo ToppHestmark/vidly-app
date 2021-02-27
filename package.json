@@ -1,0 +1,22 @@
+{
+  "name": "vidly",
+  "version": "1.0.0",
+  "description": "Video renting company",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Topp Hestmark",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/joi": "^15.1.1",
+    "config": "^3.3.3",
+    "debug": "^2.6.9",
+    "express": "^4.17.1",
+    "helmet": "^4.4.1",
+    "joi": "^17.4.0",
+    "mongoose": "^5.11.18",
+    "morgan": "^1.10.0"
+  }
+}
