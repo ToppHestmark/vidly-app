@@ -1,4 +1,6 @@
 const { Genre, validate } = require("../models/genre");
+// const auth = require("../middleware/auth");
+// const admin = require("../middleware/admin");
 const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
