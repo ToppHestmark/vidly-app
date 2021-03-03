@@ -1,7 +1,7 @@
 const { Rental, validate } = require("../models/rental");
 const { Movie } = require("../models/movie");
 const { Customer } = require("../models/customer");
-// const auth = require("../middleware/auth");
+const auth = require("../middleware/auth");
 const mongoose = require("mongoose");
 const Fawn = require("fawn");
 const express = require("express");
@@ -9,12 +9,12 @@ const router = express.Router();
 
 Fawn.init(mongoose);
 
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   const rentals = await Rental.find().select("-__v").sort("-dateOut");
   res.send(rentals);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -58,7 +58,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", [auth], async (req, res) => {
   const rental = await Rental.findById(req.params.id).select("-__v");
 
   if (!rental)
