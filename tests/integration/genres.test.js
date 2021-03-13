@@ -1,5 +1,6 @@
 const request = require("supertest");
 const { Genre } = require("../../models/genre");
+const { User } = require("../../models/user");
 
 let server;
 
@@ -43,6 +44,60 @@ describe("/api/genres", () => {
       const res = await request(server).get("/api/genres/1");
 
       expect(res.status).toBe(404);
+    });
+  });
+
+  describe("POST /", () => {
+    let token;
+    let name;
+
+    const execute = async () => {
+      return await request(server)
+        .post("/api/genres")
+        .set("x-auth-token", token)
+        .send({ name });
+    };
+
+    beforeEach(() => {
+      token = new User().generateAuthToken();
+      name = "genre1";
+    });
+
+    it("should return 401 if clien is not logged in", async () => {
+      token = "";
+      const res = await execute();
+
+      expect(res.status).toBe(401);
+    });
+
+    it("should return 400 if genre is less than 5 characters.", async () => {
+      name = "Love";
+
+      const res = await execute();
+
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 400 if genre is more than 50 character.", async () => {
+      name = new Array(54).join("myNameIs");
+
+      const res = await execute();
+
+      expect(res.status).toBe(400);
+    });
+
+    it("should save the genre if it is valid.", async () => {
+      await execute();
+
+      const genre = await Genre.find({ name: "genre1" });
+      expect(genre).not.toBeNull();
+    });
+
+    it("should return the genre if valid.", async () => {
+      const res = await execute();
+
+      expect(res.body).toHaveProperty("_id");
+      expect(res.body).toHaveProperty("name", "genre1");
     });
   });
 });
